@@ -1,6 +1,6 @@
 package org.springcloud.mcsv.cours.mcsvcours.controller;
 
-import org.springcloud.mcsv.cours.mcsvcours.entity.Course;
+import org.springcloud.mcsv.cours.mcsvcours.models.entity.Course;
 import org.springcloud.mcsv.cours.mcsvcours.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
