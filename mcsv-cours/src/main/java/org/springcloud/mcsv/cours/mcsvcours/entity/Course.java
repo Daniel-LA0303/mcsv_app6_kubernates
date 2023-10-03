@@ -1,6 +1,7 @@
 package org.springcloud.mcsv.cours.mcsvcours.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "courses")
@@ -10,6 +11,7 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty
     private String name;
 
     public Long getId() {

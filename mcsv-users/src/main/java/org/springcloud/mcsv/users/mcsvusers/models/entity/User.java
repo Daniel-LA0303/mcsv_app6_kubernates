@@ -2,6 +2,9 @@ package org.springcloud.mcsv.users.mcsvusers.models.entity;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "users")
@@ -11,11 +14,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty
     private String name;
 
+    @Email
+    @NotEmpty
     @Column(unique = true, length = 100)
     private String email;
 
+    @NotBlank
     private String password;
 
     public Long getId() {

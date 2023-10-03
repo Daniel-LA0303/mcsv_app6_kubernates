@@ -5,10 +5,11 @@ import org.springcloud.mcsv.users.mcsvusers.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import javax.validation.Valid;
+import java.util.*;
 
 @RestController
 public class UserController {
@@ -34,16 +35,33 @@ public class UserController {
 
     @PostMapping
     //@ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> save(@RequestBody User user){
+    public ResponseEntity<?> save(@Valid @RequestBody User user, BindingResult result){
+
+        if (result.hasErrors()){
+            return valid(result);
+        }
+
+        if(!user.getEmail().isEmpty() && userService.existsByEmail(user.getEmail())){
+            return ResponseEntity.badRequest().body(Collections.singletonMap("email", "email already exists"));
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody User user, @PathVariable Long id){
+    public ResponseEntity<?> update(@Valid @RequestBody User user, BindingResult result,@PathVariable Long id){
+
+        if (result.hasErrors()){
+            return valid(result);
+        }
+
 
         Optional<User> userOptional = userService.byId(id);
         if (userOptional.isPresent()){
             User userDb = userOptional.get();
+            if(!user.getEmail().equalsIgnoreCase(userDb.getEmail()) && userService.findByEmail(user.getEmail()).isPresent()){
+                return ResponseEntity.badRequest().body(Collections.singletonMap("email", "email already exists"));
+            }
             userDb.setName(user.getName());
             userDb.setEmail(user.getEmail());
             userDb.setPassword(user.getPassword());
@@ -61,5 +79,13 @@ public class UserController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    private static ResponseEntity<Map<String, String>> valid(BindingResult result) {
+        Map<String, String> errors = new HashMap<>();
+        result.getFieldErrors().forEach(err -> {
+            errors.put(err.getField(), "the filed " + err.getField() + " " + err.getDefaultMessage());
+        });
+        return ResponseEntity.badRequest().body(errors);
     }
 }
