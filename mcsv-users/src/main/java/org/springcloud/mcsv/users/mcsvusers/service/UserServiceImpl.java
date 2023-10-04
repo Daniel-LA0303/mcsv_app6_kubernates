@@ -49,4 +49,9 @@ public class UserServiceImpl implements UserService{
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+
+    @Override
+    public List<User> usersByCourse(Iterable<Long> id) {
+        return (List<User>) userRepository.findAllById(id);
+    }
 }

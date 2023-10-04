@@ -19,7 +19,7 @@ public class Course {
     private String name;
 
     //This is the relationship between courses and users
-    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
     //          - if delete users, delete user of course also
     @JoinColumn(name = "course_id") //this is the name of the column in the table courses_users
     private List<CourseUser> courseUsers;

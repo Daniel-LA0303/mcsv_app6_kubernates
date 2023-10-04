@@ -19,4 +19,7 @@ public interface UserService {
 
     boolean existsByEmail(String email);
 
+    //with this method we get the list of users by course
+    List<User> usersByCourse(Iterable<Long> id);
+
 }
