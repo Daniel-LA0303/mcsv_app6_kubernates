@@ -119,4 +119,30 @@ public class CourseServiceImpl implements CourseService{
         }
         return Optional.empty();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Course> byIdWithUsers(Long id) {
+        Optional<Course> optionalCourse = courseRepository.findById(id);
+        //validation
+        if(optionalCourse.isPresent()){
+            Course course = optionalCourse.get(); //get the course
+            if(!course.getCourseUsers().isEmpty()){
+                //we get the ids
+                List<Long> ids = course.getCourseUsers().stream().map(u -> u.getUserId()).collect(java.util.stream.Collectors.toList());
+                //we communicate with the microservice user to get the users
+                List<User> users = userClientRest.getUsersByCourse(ids);
+                course.setUsers(users); //we set the users to the course
+            }
+            return Optional.of(course);
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    @Transactional
+    public void deleteUserCourseById(Long id) {
+        courseRepository.deleteCourseUserById(id);
+    }
 }

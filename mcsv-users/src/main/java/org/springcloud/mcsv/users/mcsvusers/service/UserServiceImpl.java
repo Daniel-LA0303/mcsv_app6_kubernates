@@ -1,5 +1,6 @@
 package org.springcloud.mcsv.users.mcsvusers.service;
 
+import org.springcloud.mcsv.users.mcsvusers.clients.CourseClirentRest;
 import org.springcloud.mcsv.users.mcsvusers.models.entity.User;
 import org.springcloud.mcsv.users.mcsvusers.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CourseClirentRest courseClientRest;
 
 
     @Override
@@ -37,7 +41,10 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void delete(Long id) {
+
         userRepository.deleteById(id);
+        courseClientRest.deleteUserCourseById(id); //we delete the user in the courses too
+
     }
 
     @Override

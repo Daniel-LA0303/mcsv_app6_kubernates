@@ -26,7 +26,8 @@ public class CourseController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> byId(@PathVariable  Long id){
-        Optional<Course> optionalCourse = courseService.byId(id);
+        //Optional<Course> optionalCourse = courseService.byId(id);
+        Optional<Course> optionalCourse = courseService.byIdWithUsers(id);
         if(!optionalCourse.isPresent()){
             return ResponseEntity.notFound().build();
         }
@@ -112,6 +113,14 @@ public class CourseController {
             return ResponseEntity.status(HttpStatus.OK).body(optionalUser.get());
         }
         return ResponseEntity.notFound().build();
+    }
+
+
+    //this contrrler it communicate with the microservice user
+    @DeleteMapping("/delete-user-by-id/{userId}")
+    public ResponseEntity<?> deleteUserCourseById(@PathVariable Long userId){
+        courseService.deleteUserCourseById(userId);
+        return ResponseEntity.noContent().build();
     }
 
     private static ResponseEntity<Map<String, String>> valid(BindingResult result) {
