@@ -1,11 +1,26 @@
 FROM openjdk:18.0.2.1-slim
 
-WORKDIR /app
+WORKDIR /app/mcsv-users
 
-# Copy the jar file to the container
-COPY ./target/mcsv-users-0.0.1-SNAPSHOT.jar .
+# Copy the pom.xml file to download dependencies
+COPY ./pom.xml /app
+# Copy the complete project in the container
+COPY ./mcsv-users/.mvn ./.mvn
+#we need to copy the mvnw file to save the cache of maven
+COPY ./mcsv-users/mvnw .
+#we copy the file pom to download the dependencies
+COPY ./mcsv-users/pom.xml .
+
+#skip test and ejecution in each build and delete the target folder
+RUN ./mvnw clean package -Dmaven.test.skip -Dmaven.main.skip -Dspring-boot.repackage.skip && rm -r ./target/
+
+# Copy the complete project in the container
+COPY ./mcsv-users/src ./src
+
+#we run the maven command to download the dependencies and run project
+RUN ./mvnw clean package -DskipTests
 
 # Run the jar file with port
 EXPOSE 8081
 
-ENTRYPOINT ["java", "-jar", "mcsv-users-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "./target/mcsv-users-0.0.1-SNAPSHOT.jar"]
