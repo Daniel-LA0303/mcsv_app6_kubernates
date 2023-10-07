@@ -1,4 +1,4 @@
-FROM openjdk:18.0.2.1-slim
+FROM openjdk:18-jdk-alpine as builder
 
 WORKDIR /app/mcsv-users
 
@@ -20,7 +20,15 @@ COPY ./mcsv-users/src ./src
 #we run the maven command to download the dependencies and run project
 RUN ./mvnw clean package -DskipTests
 
+# ------------------ Second stage ------------------
+#we cretae a new image with the image previous
+FROM openjdk:18-jdk-alpine
+
+WORKDIR /app
+
+COPY --from=builder /app/mcsv-users/target/mcsv-users-0.0.1-SNAPSHOT.jar .
+
 # Run the jar file with port
 EXPOSE 8081
 
-ENTRYPOINT ["java", "-jar", "./target/mcsv-users-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "mcsv-users-0.0.1-SNAPSHOT.jar"]
