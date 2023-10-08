@@ -31,4 +31,5 @@ COPY --from=builder /app/mcsv-users/target/mcsv-users-0.0.1-SNAPSHOT.jar .
 # Run the jar file with port
 EXPOSE 8081
 
-ENTRYPOINT ["java", "-jar", "mcsv-users-0.0.1-SNAPSHOT.jar"]
+#ENTRYPOINT ["java", "-jar", "mcsv-users-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "mcsv-users-0.0.1-SNAPSHOT.jar"]
