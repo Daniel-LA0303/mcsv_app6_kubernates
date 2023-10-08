@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "mcsv-users", url = "localhost:8081") //this annotation is to indicate the name of the microservice to communicate with mcsv-users
+@FeignClient(name = "mcsv-users", url = "mcsv-usersl:8081") //this annotation is to indicate the name of the microservice to communicate with mcsv-users
 public interface UserClientRest {
 
     //we communicate with the microservice mcsv-users to get the user by id (as controller)
