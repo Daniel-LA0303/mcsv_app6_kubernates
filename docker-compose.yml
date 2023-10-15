@@ -39,7 +39,13 @@ services:
       #dockerfile: ./mcsv-users/Dockerfile
     ports:
       - "8081:8081"
-    env_file: .\mcsv-users\.env
+    environment:
+      PORT: 8081
+      DB_HOST: mysql8:3306
+      DB_DATABASE: courses_mcsv_pro6_kubernates_11
+      DB_USERNAME: root
+      DB_PASSWORD: 1234
+      COURS_URL: cours-mcsv-container:8082
     networks:
         - spring
     #this container depends on mysql8
@@ -56,7 +62,13 @@ services:
       #dockerfile: ./mcsv-cours/Dockerfile
     ports:
       - "8082:8082"
-    env_file: .\mcsv-cours\.env
+    environment:
+      PORT: 8082
+      DB_HOST: postgres14:5432
+      DB_DATABASE: mcsv_project6_cours
+      DB_USERNAME: postgres
+      DB_PASSWORD: 1234
+      USERS_URL: users-mcsv-container:8081
     networks:
       - spring
     #this container depends on postgres14
