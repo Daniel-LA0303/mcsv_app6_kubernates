@@ -1,0 +1,54 @@
+version: "3.9"
+services:
+  #container 3
+  mysql8:
+    container_name: mysql8
+    image: mysql:8
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: courses_mcsv_pro6_kubernates_11
+    volumes:
+      - data-mysql:/var/lib/mysql
+    restart: always
+    networks:
+      - spring
+  #container 1
+  users-mcsv-container:
+    container_name: users-mcsv-container
+    #download the image from docker hub
+    image: daniella03/users-mcsv
+    #we construct the image from the Dockerfile
+    #build:
+     # context: ./
+      #dockerfile: ./mcsv-users/Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      PORT: 8081
+      DB_HOST: mysql8:3306
+      DB_DATABASE: courses_mcsv_pro6_kubernates_11
+      DB_USERNAME: root
+      DB_PASSWORD: 1234
+      COURS_URL: ec2-54-209-14-42.compute-1.amazonaws.com:8082
+    networks:
+        - spring
+    #this container depends on mysql8
+    depends_on:
+        - mysql8
+    restart: always
+
+volumes:
+  data-mysql:
+    name: data-mysql
+
+#define networks
+networks:
+  spring:
+    name: spring
+
+
+
+
+

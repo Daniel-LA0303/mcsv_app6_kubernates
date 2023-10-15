@@ -1,20 +1,5 @@
 version: "3.9"
 services:
-  #container 3
-  mysql8:
-    container_name: mysql8
-    image: mysql:8
-    ports:
-      - "3307:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: courses_mcsv_pro6_kubernates_11
-    volumes:
-      - data-mysql:/var/lib/mysql
-    restart: always
-    networks:
-      - spring
-  #container 4
   postgres14:
     container_name: postgres14
     image: postgres:14-alpine
@@ -28,30 +13,6 @@ services:
     restart: always
     networks:
       - spring
-  #container 1
-  users-mcsv-container:
-    container_name: users-mcsv-container
-    #download the image from docker hub
-    image: daniella03/users-mcsv
-    #we construct the image from the Dockerfile
-    #build:
-     # context: ./
-      #dockerfile: ./mcsv-users/Dockerfile
-    ports:
-      - "8081:8081"
-    environment:
-      PORT: 8081
-      DB_HOST: mysql8:3306
-      DB_DATABASE: courses_mcsv_pro6_kubernates_11
-      DB_USERNAME: root
-      DB_PASSWORD: 1234
-      COURS_URL: cours-mcsv-container:8082
-    networks:
-        - spring
-    #this container depends on mysql8
-    depends_on:
-        - mysql8
-    restart: always
   #container 2
   cours-mcsv-container:
     container_name: cours-mcsv-container
@@ -68,7 +29,7 @@ services:
       DB_DATABASE: mcsv_project6_cours
       DB_USERNAME: postgres
       DB_PASSWORD: 1234
-      USERS_URL: users-mcsv-container:8081
+      USERS_URL: ec2-18-205-246-26.compute-1.amazonaws.com:8081
     networks:
       - spring
     #this container depends on postgres14
@@ -78,8 +39,6 @@ services:
     restart: always
 #define volumes
 volumes:
-  data-mysql:
-    name: data-mysql
   data-postgres:
     name: data-postgres
 
