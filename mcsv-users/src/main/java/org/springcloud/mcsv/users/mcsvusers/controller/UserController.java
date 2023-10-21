@@ -3,6 +3,8 @@ package org.springcloud.mcsv.users.mcsvusers.controller;
 import org.springcloud.mcsv.users.mcsvusers.models.entity.User;
 import org.springcloud.mcsv.users.mcsvusers.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -17,9 +19,19 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    //endpoint simuled
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    @GetMapping("/crash")
+    public void crash(){
+        ((ConfigurableApplicationContext) applicationContext).close();
+    }
+
+
     @GetMapping
-    public List<User> list(){
-        return userService.list();
+    public Map<String, List<User>> list(){
+        return Collections.singletonMap("users", userService.list());
     }
 
     @GetMapping("/{id}")
